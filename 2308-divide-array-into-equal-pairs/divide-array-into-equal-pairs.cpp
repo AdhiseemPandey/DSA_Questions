@@ -1,14 +1,14 @@
 class Solution {
 public:
     bool divideArray(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-    for (int i = 0; i < nums.size(); i += 2) {
-        if (nums[i] != nums[i + 1]) {
-            return false;
+        unordered_set<int> remain;
+        for(int ele : nums){
+            if(remain.count(ele)) remain.erase(ele);
+            else                  remain.insert(ele);
         }
+        return remain.size()==0;
     }
-    
-    return true;
-    }
-    // T.C. => O(NlogN)
+    // T.C. => O(N)
+    // S.C. => O(N)
+
 };
