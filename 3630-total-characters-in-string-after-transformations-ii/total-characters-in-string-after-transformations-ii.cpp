@@ -1,125 +1,69 @@
-class Solution {
-    using Matrix = array<array<int, 26>, 26>;
-    int MOD = 1e9 + 7;
+// 15 May 2025 
 
-    inline Matrix multiplyMatrices(Matrix& A, Matrix& B) {
-        Matrix result{};
-        for (int i = 0; i < 26; ++i) {
-            for (int j = 0; j < 26; ++j) {
-                for (int k = 0; k < 26; ++k) {
-                    result[i][j] = (result[i][j] + (1LL * A[i][k] * B[k][j]) % MOD) % MOD;
-                }
-            }
-        }
-        return result;
-    }
-
-    inline Matrix raiseMatrixToPower(Matrix& baseMatrix, int exponent) {
-        Matrix identityMatrix{};
-        for (int i = 0; i < 26; ++i)
-            identityMatrix[i][i] = 1;
-
-        while (exponent) {
-            if (exponent & 1)
-                identityMatrix = multiplyMatrices(baseMatrix, identityMatrix);
-
-            baseMatrix = multiplyMatrices(baseMatrix, baseMatrix);
-            exponent /= 2;
-        }
-        return identityMatrix;
-    }
-
-public:
-    int lengthAfterTransformations(string inputString, int numTransformations, vector<int>& shiftValues) {
-        array<int, 26> initialFrequencies{};
-        for (char c : inputString)
-            initialFrequencies[c - 'a']++;
-
-        Matrix transformationMatrix{};
-        for (int ch = 0; ch < 26; ++ch) {
-            for (int offset = ch + 1; offset <= ch + shiftValues[ch]; ++offset)
-                transformationMatrix[offset % 26][ch]++;
-        }
-
-        Matrix finalTransformationMatrix = raiseMatrixToPower(transformationMatrix, numTransformations);
-
-        array<int, 26> transformedFrequencies{};
-        for (int i = 0; i < 26; ++i) {
-            for (int j = 0; j < 26; ++j)
-                transformedFrequencies[i] = (transformedFrequencies[i] + (1LL * finalTransformationMatrix[i][j] * initialFrequencies[j]) % MOD) % MOD;
-        }
-
-        int finalStringLength = 0;
-        for (int i = 0; i < 26; ++i)
-            finalStringLength = (finalStringLength + transformedFrequencies[i]) % MOD;
-
-        return finalStringLength;
-    }
-};
+// 1. Matrix Exponentiation
+// 2. Matrix Multiplication 
+// 3. Binary Exponentiation
 
 
-
-/*
 
 
 class Solution {
-    using Matrix = array<array<int, 26>, 26>;
-    int MOD = 1e9 + 7;
+    using Matrix = array<array<int,26>,26>;
+    int MOD = 1e9+7;
 
-    inline Matrix multiplyMatrices(Matrix& A, Matrix& B) {
-        Matrix result{};
-        for (int i = 0; i < 26; ++i) {
-            for (int j = 0; j < 26; ++j) {
-                for (int k = 0; k < 26; ++k) {
-                    result[i][j] = (result[i][j] + (1LL * A[i][k] * B[k][j]) % MOD) % MOD;
+    inline Matrix matrixMultiplication(Matrix& A,Matrix& B){
+        Matrix res{};
+        for(int i=0;i<26;++i){
+            for(int j=0;j<26;++j){
+                for(int k=0;k<26;++k){
+                    res[i][j] = (res[i][j] + (1LL*A[i][k]*B[k][j]) % MOD) % MOD;
                 }
             }
         }
-        return result;
+        return res;
     }
 
-    inline Matrix raiseMatrixToPower(Matrix& baseMatrix, int exponent) {
-        Matrix identityMatrix{};
-        for (int i = 0; i < 26; ++i)
-            identityMatrix[i][i] = 1;
-
-        while (exponent) {
-            if (exponent & 1)
-                identityMatrix = multiplyMatrices(baseMatrix, identityMatrix);
-
-            baseMatrix = multiplyMatrices(baseMatrix, baseMatrix);
-            exponent /= 2;
+    inline Matrix matrixExponentiation(Matrix& transformation_matrix,int t){
+        Matrix res{};
+        //Create identity matrix (to multiply)
+        for(int i=0;i<26;++i)
+            res[i][i] = 1;
+        
+        while(t){
+            if(t&1)
+                res = matrixMultiplication(transformation_matrix,res);
+            
+            //Square the base & half the exponent
+            transformation_matrix = matrixMultiplication(transformation_matrix,transformation_matrix);
+            t /= 2;
         }
-        return identityMatrix;
+        return res;
     }
-
 public:
-    int lengthAfterTransformations(string inputString, int numTransformations, vector<int>& shiftValues) {
-        array<int, 26> initialFrequencies{};
-        for (char c : inputString)
-            initialFrequencies[c - 'a']++;
+    int lengthAfterTransformations(string s, int t, vector<int>& nums) {
+        array<int,26> intial_freq{};
+        for(char c: s)
+            intial_freq[c-'a']++;
 
-        Matrix transformationMatrix{};
-        for (int ch = 0; ch < 26; ++ch) {
-            for (int offset = ch + 1; offset <= ch + shiftValues[ch]; ++offset)
-                transformationMatrix[offset % 26][ch]++;
+        Matrix transformation_matrix{};
+        for(int i=0;i<26;++i){
+            //Update column for each transformation
+            for(int j=i+1; j<=i+nums[i]; ++j)
+                transformation_matrix[j%26][i]++;
         }
 
-        Matrix finalTransformationMatrix = raiseMatrixToPower(transformationMatrix, numTransformations);
-
-        array<int, 26> transformedFrequencies{};
-        for (int i = 0; i < 26; ++i) {
-            for (int j = 0; j < 26; ++j)
-                transformedFrequencies[i] = (transformedFrequencies[i] + (1LL * finalTransformationMatrix[i][j] * initialFrequencies[j]) % MOD) % MOD;
+        Matrix res = matrixExponentiation(transformation_matrix,t);
+        //Now calculate res*intial_freq
+        array<int,26> final_array{};
+        for(int i=0;i<26;++i){
+            for(int j=0;j<26;++j)
+                final_array[i] = (final_array[i] + (1LL*res[i][j]*intial_freq[j])% MOD) % MOD;
         }
 
-        int finalStringLength = 0;
-        for (int i = 0; i < 26; ++i)
-            finalStringLength = (finalStringLength + transformedFrequencies[i]) % MOD;
-
-        return finalStringLength;
+        int string_size = 0;
+        for(int i=0;i<26;++i)
+            string_size = (string_size + final_array[i]) % MOD;
+        
+        return string_size;
     }
 };
-
-
-*/
