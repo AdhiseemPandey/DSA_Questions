@@ -1,15 +1,15 @@
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
-       int cnt = 1 ; 
-       int res = nums[0];
-       for( int i = 1 ; i < nums.size() ; i++){
-        if(cnt == 0 ) res = nums[i];
-
-        if(res == nums[i]) cnt++;
-        else cnt--;
-       }
-       return res;
+        map<int,int> ap;
+        for(int i = 0 ; i < nums.size() ; i++){
+            ap[nums[i]]++;
+        }
+        for(auto it : ap){
+            if(it.second > (nums.size() / 2 )){
+                return it.first;
+            }
+        }
+        return -1;
     }
 };
-// Bayer - Moore Voting Algorithm
