@@ -22,3 +22,22 @@ public:
         return prev;
     }
 };
+
+
+
+// recursive way 
+/*
+reverse (head){
+    if( head ==NULL || head -> next == NULL ){
+        return head ;
+    }
+    NOde* newHead = reverse ( head -> next );
+    NOde* front = head -> next ; 
+    front -> next = head ;
+    had -> next = NULL ;
+    return newHead;
+}
+
+
+
+*/
