@@ -14,7 +14,7 @@ public:
         ListNode* dummy = new ListNode(0, head);
         ListNode* fast = dummy;
         ListNode* slow = dummy;
-
+// dummy = head 
         // Move fast n steps ahead
         for (int i = 0; i < n; i++) {
             if (fast->next == NULL) return head; // n is larger than list size
