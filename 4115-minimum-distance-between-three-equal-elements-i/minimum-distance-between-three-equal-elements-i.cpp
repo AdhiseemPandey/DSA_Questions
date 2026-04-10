@@ -1,16 +1,44 @@
+// class Solution {
+// public:
+//     int minimumDistance(vector<int>& nums) {
+//         int mini = INT_MAX;
+//         int n = nums.size();
+
+//         for(int i = 0; i < n; i++) {
+//             for(int j = i + 1; j < n; j++) {
+//                 for(int k = j + 1; k < n; k++) {
+//                     if(nums[i] == nums[j] && nums[j] == nums[k]) {
+//                         int res = abs(i - j) + abs(j - k) + abs(k - i);
+//                         mini = min(mini, res);
+//                     }
+//                 }
+//             }
+//         }
+
+//         return (mini == INT_MAX) ? -1 : mini;
+//     }
+// };
+
+
+
 class Solution {
 public:
     int minimumDistance(vector<int>& nums) {
-        int mini = INT_MAX;
+        unordered_map<int, vector<int>> mp;
         int n = nums.size();
 
         for(int i = 0; i < n; i++) {
-            for(int j = i + 1; j < n; j++) {
-                for(int k = j + 1; k < n; k++) {
-                    if(nums[i] == nums[j] && nums[j] == nums[k]) {
-                        int res = abs(i - j) + abs(j - k) + abs(k - i);
-                        mini = min(mini, res);
-                    }
+            mp[nums[i]].push_back(i);
+        }
+
+        int mini = INT_MAX;
+
+        for(auto &p : mp) {
+            auto &v = p.second;
+            if(v.size() >= 3) {
+                for(int i = 0; i + 2 < v.size(); i++) {
+                    int dist = 2 * (v[i + 2] - v[i]);
+                    mini = min(mini, dist);
                 }
             }
         }
