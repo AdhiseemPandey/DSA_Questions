@@ -1,0 +1,1 @@
+<h2>closest-equal-element-queries Notes</h2><hr>[ Time taken: 21hrs 22m 5s ]
