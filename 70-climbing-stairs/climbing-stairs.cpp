@@ -1,11 +1,11 @@
 class Solution {
 public:
     int helper(int n, vector<int>& dp) {
-        if (n <= 1) return 1; // base cases: 1 way to climb 0 or 1 step
-        if (dp[n] != -1) return dp[n]; // already computed
-
-        // recurrence: ways to climb n = ways(n-1) + ways(n-2)
-        dp[n] = helper(n-1, dp) + helper(n-2, dp);
+        dp[0] = 1;
+        dp[1] = 1;
+        for( int i = 2 ; i <= n ; i++ ){ 
+            dp[i] = dp[i-1] + dp[i-2];
+        }
         return dp[n];
     }
 
