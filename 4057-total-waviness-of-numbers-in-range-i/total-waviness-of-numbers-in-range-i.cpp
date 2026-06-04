@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int findWavy(int num){
+        string s = to_string(num);
+
+        int l = s.length();
+        if( l < 3 ) return 0;
+
+        int cnt = 0 ;
+        // exclude first and last  
+        for( int i = 1 ; i <= l - 2 ; i++ ) {
+            //peak 
+            if( s[i] > s[i-1] && s[i] > s[i+1] ) cnt++;
+            // valley
+            if( s[i] < s[i-1] && s[i] < s[i+1] ) cnt++;
+        }
+        return cnt;
+    }
+    int totalWaviness(int num1, int num2) {
+        int cnt  = 0;
+        for( int num = num1 ; num <= num2 ; num++ ){
+            cnt += findWavy(num);
+        }
+
+        return cnt ;
+    }
+};
