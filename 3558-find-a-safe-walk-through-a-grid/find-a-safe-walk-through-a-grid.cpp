@@ -1,6 +1,6 @@
 class Solution {
     vector<pair<int,int>> directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
+    // or vector<vector<int>> directions = ...... see beloow changes 
 public:
     bool findSafeWalk(vector<vector<int>>& grid, int health) {
         int rows = grid.size();
@@ -19,7 +19,11 @@ public:
             for (auto &dir : directions) {
                 int newRow = row + dir.first;
                 int newCol = col + dir.second;
-
+                // BELOW changes are 
+                /*
+                int nr = r + dir[0]
+                int nc = c + dir[1]
+                */
                 if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols) continue;
 
                 int newCost = minDanger[row][col] + grid[newRow][newCol];
